@@ -88,7 +88,6 @@
             align-items: center;
         }
         .brand-logo img {
-            /* TWEAK: Increased Logo size in Sidebar */
             max-height: 130px; 
             width: auto;
             margin-bottom: 15px;
@@ -868,17 +867,24 @@
                                 ${pageData.map((row, idx) => {
                                     const delivered = isDelivered(row);
                                     let rowStyle = "";
+                                    
                                     if(delivered) {
+                                        // إذا تم التسليم: خط عريض وكبير
                                         rowStyle = "font-weight: 800; font-size: 14px;";
                                     } else {
-                                        rowStyle = "background-color: #f2f2f2; color: #000000; font-weight: normal;";
+                                        // === التعديل هنا: إضافة font-size: 14px ===
+                                        rowStyle = "background-color: #f2f2f2; color: #000000; font-weight: normal; font-size: 14px;";
                                     }
 
                                     const globalIndex = start + idx + 1; 
                                     return `
                                     <tr style="${rowStyle}">
                                         <td style="padding:6px; border:1px solid #999; font-weight:bold;">${globalIndex}</td>
-                                        ${headers.map(h => `<td style="padding:6px; border:1px solid #999;">${row[h] || ''}</td>`).join('')}
+                                        ${headers.map(h => {
+                                            // === التعديل هنا: السماح بظهور الصفر ===
+                                            const val = (row[h] !== undefined && row[h] !== null) ? row[h] : '';
+                                            return `<td style="padding:6px; border:1px solid #999;">${val}</td>`;
+                                        }).join('')}
                                     </tr>`;
                                 }).join('')}
                             </tbody>
@@ -1009,3 +1015,4 @@
     </script>
 </body>
 </html>
+
