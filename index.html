@@ -88,7 +88,8 @@
             align-items: center;
         }
         .brand-logo img {
-            max-height: 80px;
+            /* TWEAK: Increased Logo size in Sidebar */
+            max-height: 130px; 
             width: auto;
             margin-bottom: 15px;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
@@ -816,8 +817,8 @@
                         <div style="display:flex; flex-wrap:wrap; gap:15px;">
                             ${totalKeys.map(key => `
                                 <div style="flex:1; min-width:100px; text-align:center; border-left:1px solid #eee;">
-                                    <div style="font-size:10px; color:#777;"> مجموع ${key}</div>
-                                    <div style="font-weight:bold; color:#333; font-size:17px;">${totals[key].toFixed(2)}</div>
+                                    <div style="font-size:14px; color:#777;"> مجموع ${key}</div>
+                                    <div style="font-weight:bold; color:#333; font-size:24px;">${totals[key].toFixed(2)}</div>
                                 </div>
                             `).join('')}
                         </div>
@@ -845,7 +846,7 @@
                         </div>
 
                         <img src="https://raw.githubusercontent.com/BaselGhanem/RamadaDelivery/refs/heads/main/20260105_151047_0000.png" 
-                             style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 60px; width: auto;">
+                             style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 110px; width: auto;">
 
                         <div style="text-align:left;">
                             <h3 style="margin:0; font-weight:bold; font-size:20px; color:${pdfText}">${clientName}</h3>
@@ -866,18 +867,12 @@
                             <tbody>
                                 ${pageData.map((row, idx) => {
                                     const delivered = isDelivered(row);
-                                    
-                                    // === التعديل هنا فقط ===
                                     let rowStyle = "";
-                                    
                                     if(delivered) {
-                                        // إذا تم التسليم: خط عريض وكبير
                                         rowStyle = "font-weight: 800; font-size: 14px;";
                                     } else {
-                                        // إذا لم يتم التسليم: خلفية رمادية وخط عادي (ليس عريض)
                                         rowStyle = "background-color: #f2f2f2; color: #000000; font-weight: normal;";
                                     }
-                                    // =======================
 
                                     const globalIndex = start + idx + 1; 
                                     return `
