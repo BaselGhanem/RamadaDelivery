@@ -1,217 +1,1990 @@
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Ramada Delivery | Premium System</title>
+
     
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
+
+
     <style>
+
         :root {
+
             /* Palette Option A: Turquoise Enhanced */
+
             --primary-brand: #099999;
+
             --primary-light: #e0f2f2;
+
             --primary-dark: #066b6b;
+
             --accent-color: #f59e0b;
+
             --text-dark: #1e293b;
+
             --text-light: #64748b;
+
             --bg-body: #f8fafc;
+
             --bg-card: #ffffff;
+
             
+
             /* Shadows & Radius for Minimal Look */
+
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
             --radius-main: 16px;
+
             --radius-btn: 10px;
 
+
+
             /* Fluid Transitions */
+
             --transition-fluid: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
         }
+
+
 
         body {
+
             font-family: 'Tajawal', sans-serif;
+
             background-color: var(--bg-body);
+
             color: var(--text-dark);
+
             overflow-x: hidden;
+
             min-height: 100vh;
+
         }
+
+
 
         /* --- Sidebar & Layout --- */
+
         .main-wrapper {
+
             display: flex;
+
             min-height: 100vh;
+
             flex-direction: column; 
+
         }
+
+
 
         @media (min-width: 768px) {
+
             .main-wrapper { flex-direction: row; }
+
             .sidebar-wrapper {
+
                 width: 320px;
+
                 position: sticky;
+
                 top: 0;
+
                 height: 100vh;
+
                 overflow-y: auto;
+
                 border-left: 1px solid #e2e8f0;
+
             }
+
             .content-wrapper { flex: 1; padding: 40px; }
+
         }
+
+
 
         .sidebar-wrapper {
+
             background: var(--bg-card);
+
             padding: 30px 20px;
+
             box-shadow: var(--shadow-sm);
+
             z-index: 50;
+
             text-align: center; /* Ensure everything is centered */
+
         }
+
+
 
         /* --- Components --- */
+
         .brand-logo {
+
             color: var(--primary-brand);
+
             font-weight: 800;
+
             font-size: 2rem;
+
             text-align: center;
+
             margin-bottom: 30px;
+
             letter-spacing: -0.5px;
+
             position: relative;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
         }
+
         .brand-logo img {
+
             max-height: 80px; /* الحجم المناسب */
+
             width: auto;
+
             margin-bottom: 15px;
+
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); /* ظل خفيف جداً للشعار */
+
         }
+
         .brand-logo::after {
+
             content: '';
+
             display: block;
+
             width: 40px;
+
             height: 4px;
+
             background: var(--accent-color);
+
             margin: 10px auto 0;
+
             border-radius: 2px;
+
         }
+
+
 
         /* Drag & Drop Area */
+
         .drop-zone {
+
             border: 2px dashed #cbd5e1;
+
             border-radius: var(--radius-main);
+
             padding: 30px 20px;
+
             text-align: center;
+
             transition: var(--transition-fluid);
+
             background: #f8fafc;
+
             cursor: pointer;
+
             position: relative;
+
             overflow: hidden;
+
         }
+
         .drop-zone:hover, .drop-zone.dragover {
+
             border-color: var(--primary-brand);
+
             background: var(--primary-light);
+
             transform: scale(1.02);
+
         }
+
         .drop-zone i {
+
             font-size: 2.5rem;
+
             color: var(--primary-brand);
+
             margin-bottom: 10px;
+
             transition: var(--transition-fluid);
+
         }
+
         .drop-zone p { margin: 0; color: var(--text-light); font-weight: 500; }
+
         
+
         .section-title {
+
             font-size: 0.9rem;
+
             font-weight: 700;
+
             color: var(--text-dark);
+
             margin: 20px 0 10px;
+
             display: flex;
+
             align-items: center;
+
             gap: 8px;
+
             text-align: right;
+
         }
+
         .section-title i { color: var(--primary-brand); }
 
+
+
         .form-control, .form-select {
+
             border-radius: var(--radius-btn);
+
             border: 1px solid #e2e8f0;
+
             padding: 10px 15px;
+
             font-size: 0.95rem;
+
             transition: var(--transition-fluid);
+
         }
+
         .form-control:focus, .form-select:focus {
+
             border-color: var(--primary-brand);
+
             box-shadow: 0 0 0 3px rgba(9, 153, 153, 0.1);
+
         }
+
+
 
         /* Custom Checkbox Container */
+
         .checkbox-group {
+
             max-height: 200px;
+
             overflow-y: auto;
+
             border: 1px solid #e2e8f0;
+
             border-radius: var(--radius-btn);
+
             padding: 10px;
+
             background: #fff;
+
             text-align: right;
+
         }
+
         .form-check { text-align: right; }
+
         
+
         /* Buttons */
+
         .btn-primary-custom {
+
             background: var(--primary-brand);
+
             color: white;
+
             border: none;
+
             border-radius: var(--radius-btn);
+
             padding: 12px;
+
             font-weight: 700;
+
             width: 100%;
+
             transition: var(--transition-fluid);
+
             box-shadow: 0 4px 6px rgba(9, 153, 153, 0.2);
+
         }
+
         .btn-primary-custom:hover {
+
             background: var(--primary-dark);
+
             transform: translateY(-2px);
+
             box-shadow: 0 8px 12px rgba(9, 153, 153, 0.3);
+
             color: white;
+
         }
+
+
 
         .btn-download-all {
+
             background: linear-gradient(135deg, #f59e0b, #d97706);
+
             color: white;
+
             border: none;
+
             border-radius: var(--radius-btn);
+
             padding: 12px;
+
             width: 100%;
+
             font-weight: 700;
+
             margin-top: 15px;
+
             transition: var(--transition-fluid);
+
             box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
+
             position: relative;
+
             overflow: hidden;
+
         }
+
         .btn-download-all:hover {
+
             transform: translateY(-2px);
+
             box-shadow: 0 8px 15px rgba(245, 158, 11, 0.3);
+
             color: white;
+
         }
+
+
 
         /* Cards Grid */
+
         .client-grid-container {
+
             display: grid;
+
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
             gap: 25px;
+
             padding: 10px 0;
+
         }
 
+
+
         .client-card {
+
             background: white;
+
             border-radius: var(--radius-main);
+
             padding: 25px;
+
             border: 1px solid rgba(0,0,0,0.02);
+
             box-shadow: var(--shadow-md);
+
+            transition: var(--transition-fluid);
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+        
+
+        .client-card::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0; right: 0; width: 4px; height: 100%;
+
+            background: var(--primary-brand);
+
+            opacity: 0;
+
+            transition: var(--transition-fluid);
+
+        }
+
+
+
+        .client-card:hover {
+
+            transform: translateY(-5px);
+
+            box-shadow: var(--shadow-lg);
+
+        }
+
+        .client-card:hover::before { opacity: 1; }
+
+
+
+        .client-name {
+
+            color: var(--text-dark);
+
+            font-weight: 800;
+
+            font-size: 1.4rem;
+
+            margin-bottom: 20px;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+
+        }
+
+        .client-name:hover { color: var(--primary-brand); }
+
+
+
+        .stats-row {
+
+            display: flex;
+
+            background: #f8fafc;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            margin-bottom: 20px;
+
+        }
+
+        .stat-box { flex: 1; text-align: center; }
+
+        .stat-box:first-child { border-left: 1px solid #e2e8f0; }
+
+        .stat-val { font-weight: 800; font-size: 1.2rem; color: var(--text-dark); }
+
+        .stat-val.money { color: var(--primary-brand); }
+
+        .stat-lbl { font-size: 0.8rem; color: var(--text-light); margin-top: 5px; }
+
+
+
+        .action-btns { display: flex; gap: 10px; }
+
+        .btn-card {
+
+            flex: 1;
+
+            padding: 10px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            font-weight: 600;
+
+            transition: var(--transition-fluid);
+
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+
+        }
+
+        .btn-dl { background: var(--primary-light); color: var(--primary-brand); }
+
+        .btn-dl:hover { background: var(--primary-brand); color: white; }
+
+        
+
+        .btn-wa { background: #dcfce7; color: #166534; }
+
+        .btn-wa:hover { background: #25D366; color: white; }
+
+
+
+        /* Toast Notification */
+
+        .toast-container {
+
+            position: fixed; bottom: 20px; left: 20px; z-index: 9999;
+
+        }
+
+        .custom-toast {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            25px;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+
+            display: flex; align-items: center; gap: 15px;
+
+            margin-top: 10px;
+
+            animation: slideInLeft 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+            border-right: 4px solid var(--primary-brand);
+
+            min-width: 300px;
+
+        }
+
+        .custom-toast.error { border-right-color: #ef4444; }
+
+        .toast-icon { font-size: 1.5rem; color: var(--primary-brand); }
+
+        .custom-toast.error .toast-icon { color: #ef4444; }
+
+
+
+        @keyframes slideInLeft {
+
+            from { opacity: 0; transform: translateX(-50px); }
+
+            to { opacity: 1; transform: translateX(0); }
+
+        }
+
+
+
+        /* Loading & Empty States */
+
+        .empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
+
+        .empty-state i { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+
+
+
+        /* PDF Preview Area */
+
+        .preview-header {
+
+            background: white;
+
+            padding: 20px;
+
+            border-radius: var(--radius-main);
+
+            box-shadow: var(--shadow-sm);
+
+            margin-bottom: 20px;
+
+            display: flex; justify-content: space-between; align-items: center;
+
+        }
+
+        .table-responsive {
+
+            background: white; border-radius: var(--radius-main); padding: 20px; box-shadow: var(--shadow-sm);
+
+        }
+
+        
+
+        /* Helper Utilities */
+
+        .hidden { display: none !important; }
+
+        .fade-in { animation: fadeIn 0.6s ease-in-out; }
+
+        .text-right { text-align: right !important; }
+
+
+
+        @media (max-width: 768px) {
+
+            .sidebar-wrapper { position: relative; height: auto; width: 100%; padding-bottom: 40px; border-bottom: 1px solid #eee; }
+
+            .content-wrapper { padding: 20px; }
+
+        }
+
+
+
+        /* PDF Generation Hidden Zone (DO NOT TOUCH) */
+
+        #pdf-generation-zone { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; overflow-y: auto; padding: 40px; display: none; }
+
+        
+
+        /* Loader Overlay */
+
+        .loading-overlay {
+
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+
+            background: rgba(255,255,255,0.95); z-index: 20000;
+
+            display: none; justify-content: center; align-items: center; flex-direction: column;
+
+            backdrop-filter: blur(5px);
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div id="toastContainer" class="toast-container"></div>
+
+
+
+    <div id="loader" class="loading-overlay">
+
+        <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem; color: var(--primary-brand) !important;"></div>
+
+        <h4 class="fw-bold" style="color:var(--text-dark)" id="loaderText">جاري المعالجة...</h4>
+
+        <p class="text-muted small" id="loaderSubText">يرجى الانتظار قليلاً</p>
+
+    </div>
+
+
+
+    <div id="pdf-generation-zone">
+
+        <div id="pdf-content-wrapper"></div>
+
+    </div>
+
+
+
+    <div class="main-wrapper">
+
+        
+
+        <aside class="sidebar-wrapper">
+
+            <div class="brand-logo animate__animated animate__zoomIn">
+
+                <img src="https://raw.githubusercontent.com/BaselGhanem/RamadaDelivery/refs/heads/main/Pink%20Cute%20Simple%20Bear%20Baby%20Toys%20Logo.png" alt="Ramada Delivery Logo" class="img-fluid">
+
+                <div>Ramada <span style="font-weight:300">Delivery</span></div>
+
+            </div>
+
+
+
+            <div class="drop-zone mb-4" id="dropZone" onclick="document.getElementById('fileInput').click()">
+
+                <i class="fas fa-cloud-upload-alt"></i>
+
+                <p>اضغط أو اسحب ملف Excel هنا</p>
+
+                <div class="small text-muted mt-2" style="font-size:0.7rem">.xlsx, .xls, .csv</div>
+
+            </div>
+
+            <input type="file" id="fileInput" hidden accept=".xlsx, .xls, .csv">
+
+
+
+            <div class="mb-4 text-right">
+
+                <div class="section-title"><i class="fas fa-sliders-h"></i> إعدادات الصفحة</div>
+
+                <div class="row g-2">
+
+                    <div class="col-6">
+
+                        <label class="small text-muted d-block text-right">سطر العناوين</label>
+
+                        <input type="number" id="headerRow" class="form-control" value="1">
+
+                    </div>
+
+                    <div class="col-6">
+
+                        <label class="small text-muted d-block text-right">الأسطر/صفحة</label>
+
+                        <input type="number" id="rowsPerPage" class="form-control" value="14">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div id="colSelectDiv" class="hidden animate__animated animate__fadeIn text-right">
+
+                <div class="section-title"><i class="fas fa-list"></i> ربط الأعمدة</div>
+
+                
+
+                <div class="mb-3">
+
+                    <label class="small fw-bold mb-1 d-block">1. عمود الاسم <span class="text-danger">*</span></label>
+
+                    <select id="colSelect" class="form-select" onchange="showSumOptions()"></select>
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+                    <label class="small fw-bold mb-1 d-block">2. عمود الحالة <span class="text-danger">*</span></label>
+
+                    <select id="statusSelect" class="form-select"></select>
+
+                    <small class="text-muted d-block" style="font-size:0.75rem">يتم جمع "تم التسليم" فقط</small>
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+                    <label class="small fw-bold mb-1 d-block">3. عمود الهاتف (اختياري)</label>
+
+                    <select id="phoneSelect" class="form-select"></select>
+
+                </div>
+
+            </div>
+
+
+
+            <div id="sumConfigDiv" class="hidden animate__animated animate__fadeIn text-right">
+
+                <div class="d-flex justify-content-between align-items-center mt-4 mb-2">
+
+                    <div class="section-title m-0"><i class="fas fa-calculator"></i> أعمدة الجمع</div>
+
+                    <button class="btn btn-sm btn-link text-decoration-none p-0" onclick="toggleSelectAll()" style="font-size:0.8rem">تحديد الكل</button>
+
+                </div>
+
+
+
+                <div id="checkboxContainer" class="checkbox-group mb-3"></div>
+
+
+
+                <div class="mb-3">
+
+                    <label class="small fw-bold mb-1 d-block">المبلغ الرئيسي (للبطاقة)</label>
+
+                    <select id="primaryAmountSelect" class="form-select"></select>
+
+                </div>
+
+
+
+                <button class="btn-primary-custom" onclick="processData()">
+
+                    <i class="fas fa-bolt"></i> تحليل وعرض البيانات
+
+                </button>
+
+
+
+                <button class="btn btn-outline-danger w-100 mt-2 btn-sm border-0" onclick="resetApp()">
+
+                    <i class="fas fa-trash-alt"></i> إعادة تعيين
+
+                </button>
+
+
+
+                <button id="downloadAllBtn" class="btn-download-all hidden animate__animated animate__bounceIn" onclick="downloadAllZIP()">
+
+                    <i class="fas fa-file-archive"></i> تحميل الكل (ZIP)
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+
+        <main class="content-wrapper">
+
+            
+
+            <div id="emptyState" class="empty-state animate__animated animate__fadeIn">
+
+                <i class="fas fa-file-invoice-dollar"></i>
+
+                <h3>نظام الكشوفات المتقدم</h3>
+
+                <p>قم برفع ملف Excel من القائمة الجانبية للبدء.<br>النظام يدعم السحب والإفلات.</p>
+
+            </div>
+
+
+
+            <div id="gridArea" class="hidden animate__animated animate__fadeIn">
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+
+                    <div>
+
+                        <h4 class="fw-bold m-0 text-dark">قائمة العملاء</h4>
+
+                        <span class="text-muted small">إجمالي: <span id="totalClients" class="fw-bold text-primary">0</span> عميل</span>
+
+                    </div>
+
+                    <div class="position-relative" style="min-width: 300px;">
+
+                        <i class="fas fa-search position-absolute text-muted" style="right: 15px; top: 12px;"></i>
+
+                        <input type="text" id="search" class="form-control" placeholder="بحث سريع..." style="padding-right: 40px;" onkeyup="filterGrid()">
+
+                    </div>
+
+                </div>
+
+
+
+                <div id="cardsContainer" class="client-grid-container"></div>
+
+            </div>
+
+
+
+            <div id="previewArea" class="hidden animate__animated animate__fadeInRight">
+
+                <div class="preview-header">
+
+                    <div class="d-flex align-items-center gap-3">
+
+                        <button class="btn btn-light rounded-circle" onclick="backToGrid()" style="width:40px; height:40px;">
+
+                            <i class="fas fa-arrow-right"></i>
+
+                        </button>
+
+                        <div>
+
+                            <h5 class="fw-bold m-0" id="previewTitle">اسم العميل</h5>
+
+                            <small class="text-muted">معاينة البيانات قبل الطباعة</small>
+
+                        </div>
+
+                    </div>
+
+                    <button class="btn btn-success px-4 rounded-3 fw-bold" onclick="startPDFGeneration()">
+
+                        <i class="fas fa-download me-2"></i> تحميل PDF
+
+                    </button>
+
+                </div>
+
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle" id="previewTable">
+
+                        <thead class="table-light" style="position: sticky; top: 0;" id="previewThead"></thead>
+
+                        <tbody id="previewTbody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+
+        </main>
+
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+
+    <script>
+
+        // --- Variables ---
+
+        let excelData = [];
+
+        let headers = [];
+
+        let groupedData = {};
+
+        let currentClient = null;
+
+
+
+        // --- Drag & Drop Logic ---
+
+        const dropZone = document.getElementById('dropZone');
+
+        const fileInput = document.getElementById('fileInput');
+
+
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+
+            dropZone.addEventListener(eventName, preventDefaults, false);
+
+        });
+
+
+
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+
+            dropZone.addEventListener(eventName, highlight, false);
+
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+
+            dropZone.addEventListener(eventName, unhighlight, false);
+
+        });
+
+
+
+        function highlight() { dropZone.classList.add('dragover'); }
+
+        function unhighlight() { dropZone.classList.remove('dragover'); }
+
+
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+
+
+        function handleDrop(e) {
+
+            const dt = e.dataTransfer;
+
+            const files = dt.files;
+
+            if(files.length) handleFiles(files[0]);
+
+        }
+
+
+
+        // --- File Handling ---
+
+        fileInput.addEventListener('change', function(e) {
+
+            if(this.files.length) handleFiles(this.files[0]);
+
+        });
+
+
+
+        function handleFiles(file) {
+
+            // UI Feedback
+
+            dropZone.innerHTML = '<div class="spinner-border text-primary" role="status"></div><p class="mt-2">جاري التحليل...</p>';
+
+            
+
+            const reader = new FileReader();
+
+            const headerRow = parseInt(document.getElementById('headerRow').value) - 1;
+
+
+
+            reader.onload = function(e) {
+
+                try {
+
+                    const data = new Uint8Array(e.target.result);
+
+                    const workbook = XLSX.read(data, {type: 'array'});
+
+                    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                    
+
+                    excelData = XLSX.utils.sheet_to_json(sheet, {range: headerRow, defval: ""});
+
+
+
+                    if (excelData.length > 0) {
+
+                        processHeaders();
+
+                        showToast('تم رفع الملف بنجاح', 'success');
+
+                        dropZone.innerHTML = `<i class="fas fa-check-circle text-success"></i><p class="text-success">${file.name}</p>`;
+
+                    } else {
+
+                        showToast('الملف فارغ أو التنسيق غير صحيح', 'error');
+
+                        resetDropZone();
+
+                    }
+
+                } catch (err) {
+
+                    console.error(err);
+
+                    showToast('حدث خطأ أثناء قراءة الملف', 'error');
+
+                    resetDropZone();
+
+                }
+
+            };
+
+            reader.readAsArrayBuffer(file);
+
+        }
+
+
+
+        function resetDropZone() {
+
+            dropZone.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><p>اضغط أو اسحب ملف Excel هنا</p><div class="small text-muted mt-2">.xlsx, .xls, .csv</div>';
+
+        }
+
+
+
+        function processHeaders() {
+
+            let rawHeaders = Object.keys(excelData[0]).filter(h => !h.startsWith('__EMPTY'));
+
+            const indexBlacklist = ['#', 'id', 'no', 'no.', 'index', 'ت', 'م', 'ترقيم', 'الرقم', 'التسلسل', 'sequence'];
+
+            headers = rawHeaders.filter(h => !indexBlacklist.includes(h.toLowerCase().trim()));
+
+            
+
+            const nameSel = document.getElementById('colSelect');
+
+            const statusSel = document.getElementById('statusSelect');
+
+            const phoneSel = document.getElementById('phoneSelect');
+
+            
+
+            [nameSel, statusSel, phoneSel].forEach(sel => sel.innerHTML = '<option value="">-- اختر --</option>');
+
+
+
+            headers.forEach(h => {
+
+                const opt = `<option value="${h}">${h}</option>`;
+
+                nameSel.innerHTML += opt;
+
+                statusSel.innerHTML += opt;
+
+                phoneSel.innerHTML += opt;
+
+            });
+
+            
+
+            // Auto-detect status
+
+            const likelyStatus = headers.find(h => h.includes('حالة') || h.toLowerCase().includes('status'));
+
+            if(likelyStatus) statusSel.value = likelyStatus;
+
+
+
+            document.getElementById('colSelectDiv').classList.remove('hidden');
+
+            document.getElementById('sumConfigDiv').classList.add('hidden');
+
+        }
+
+
+
+        // --- Core Functions (Preserved Logic) ---
+
+        function isDelivered(row) {
+
+            const statusCol = document.getElementById('statusSelect').value;
+
+            if (!statusCol) return true; 
+
+            const val = row[statusCol];
+
+            if (!val) return false; 
+
+            const statusStr = String(val).trim();
+
+            return statusStr.includes("تم التسليم");
+
+        }
+
+
+
+        function showSumOptions() {
+
+            const nameCol = document.getElementById('colSelect').value;
+
+            if(!nameCol) return;
+
+
+
+            const container = document.getElementById('checkboxContainer');
+
+            const primarySelect = document.getElementById('primaryAmountSelect');
+
+            
+
+            container.innerHTML = '';
+
+            primarySelect.innerHTML = '<option value="">لا يوجد (إخفاء المبلغ)</option>';
+
+
+
+            headers.forEach(h => {
+
+                if(h !== nameCol) { 
+
+                    const div = document.createElement('div');
+
+                    div.className = 'form-check';
+
+                    div.innerHTML = `
+
+                        <input class="form-check-input sum-checkbox" type="checkbox" value="${h}" id="chk_${h}">
+
+                        <label class="form-check-label small" for="chk_${h}">${h}</label>
+
+                    `;
+
+                    container.appendChild(div);
+
+                    primarySelect.innerHTML += `<option value="${h}">${h}</option>`;
+
+                }
+
+            });
+
+
+
+            document.getElementById('sumConfigDiv').classList.remove('hidden');
+
+        }
+
+
+
+        function toggleSelectAll() {
+
+            const checkboxes = document.querySelectorAll('.sum-checkbox');
+
+            const allChecked = Array.from(checkboxes).every(c => c.checked);
+
+            checkboxes.forEach(c => c.checked = !allChecked);
+
+        }
+
+
+
+        function processData() {
+
+            const nameKey = document.getElementById('colSelect').value;
+
+            const statusKey = document.getElementById('statusSelect').value;
+
+            const primaryAmountKey = document.getElementById('primaryAmountSelect').value;
+
+            
+
+            if (!nameKey) { showToast("الرجاء اختيار عمود الاسم", 'error'); return; }
+
+            if (!statusKey) { showToast("الرجاء اختيار عمود الحالة", 'error'); return; }
+
+
+
+            groupedData = {};
+
+            excelData.forEach(row => {
+
+                const client = row[nameKey];
+
+                if (client) {
+
+                    const safeKey = String(client).trim();
+
+                    if (!groupedData[safeKey]) groupedData[safeKey] = [];
+
+                    groupedData[safeKey].push(row);
+
+                }
+
+            });
+
+            
+
+            renderGrid(primaryAmountKey);
+
+            document.getElementById('downloadAllBtn').classList.remove('hidden');
+
+            showToast(`تم معالجة ${Object.keys(groupedData).length} عميل`, 'success');
+
+        }
+
+
+
+        function renderGrid(amountKey) {
+
+            document.getElementById('emptyState').classList.add('hidden');
+
+            document.getElementById('previewArea').classList.add('hidden');
+
+            document.getElementById('gridArea').classList.remove('hidden');
+
+            
+
+            const container = document.getElementById('cardsContainer');
+
+            container.innerHTML = '';
+
+            const phoneKey = document.getElementById('phoneSelect').value;
+
+            
+
+            const clients = Object.keys(groupedData).sort();
+
+            document.getElementById('totalClients').textContent = clients.length;
+
+
+
+            clients.forEach((client, index) => {
+
+                const clientRows = groupedData[client];
+
+                const count = clientRows.length;
+
+                
+
+                let totalAmount = 0;
+
+                if(amountKey) {
+
+                    clientRows.forEach(row => {
+
+                        if(isDelivered(row)) {
+
+                            let val = parseFloat(row[amountKey]);
+
+                            if(!isNaN(val)) totalAmount += val;
+
+                        }
+
+                    });
+
+                }
+
+
+
+                let clientPhone = "";
+
+                if(phoneKey) {
+
+                    const rowWithPhone = clientRows.find(r => r[phoneKey]);
+
+                    if(rowWithPhone) clientPhone = String(rowWithPhone[phoneKey]).replace(/[^0-9]/g, '');
+
+                }
+
+
+
+                const card = document.createElement('div');
+
+                card.className = 'client-card animate__animated animate__fadeInUp';
+
+                card.style.animationDelay = `${Math.min(index * 0.05, 1)}s`; // Staggered animation
+
+                card.setAttribute('data-name', client.toLowerCase());
+
+                
+
+                card.innerHTML = `
+
+                    <div>
+
+                        <div class="client-name" onclick="openPreview('${client}')">${client}</div>
+
+                        <div class="stats-row">
+
+                            <div class="stat-box">
+
+                                <div class="stat-val">${count}</div>
+
+                                <div class="stat-lbl">شحنة</div>
+
+                            </div>
+
+                            ${amountKey ? `
+
+                            <div class="stat-box">
+
+                                <div class="stat-val money">${totalAmount.toFixed(2)}</div>
+
+                                <div class="stat-lbl">الصافي</div>
+
+                            </div>
+
+                            ` : ''}
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="action-btns">
+
+                        <button class="btn-card btn-dl" onclick="directDownload('${client}')">
+
+                            <i class="fas fa-file-pdf"></i> تحميل
+
+                        </button>
+
+                        <button class="btn-card btn-wa" onclick="sendWhatsApp('${client}', '${clientPhone}')">
+
+                            <i class="fab fa-whatsapp fa-lg"></i>
+
+                        </button>
+
+                    </div>
+
+                `;
+
+                container.appendChild(card);
+
+            });
+
+        }
+
+
+
+        // --- Preview Logic ---
+
+        function openPreview(client) {
+
+            currentClient = client;
+
+            document.getElementById('gridArea').classList.add('hidden');
+
+            document.getElementById('previewArea').classList.remove('hidden');
+
+            document.getElementById('previewTitle').textContent = client;
+
+
+
+            const data = groupedData[client].slice(0, 50); 
+
+            document.getElementById('previewThead').innerHTML = `<tr><th>#</th>${headers.map(h => `<th>${h}</th>`).join('')}</tr>`;
+
+            document.getElementById('previewTbody').innerHTML = data.map((row, idx) => {
+
+                const isDel = isDelivered(row);
+
+                const style = isDel ? '' : 'class="table-danger text-danger"';
+
+                return `<tr ${style}><td>${idx+1}</td>${headers.map(h => `<td>${row[h]}</td>`).join('')}</tr>`;
+
+            }).join('');
+
+        }
+
+
+
+        function backToGrid() {
+
+            document.getElementById('previewArea').classList.add('hidden');
+
+            document.getElementById('gridArea').classList.remove('hidden');
+
+        }
+
+
+
+        // --- Utility ---
+
+        function resetApp() {
+
+            if(confirm('هل أنت متأكد من إعادة تعيين النظام؟ ستفقد البيانات الحالية.')) {
+
+                location.reload();
+
+            }
+
+        }
+
+
+
+        function filterGrid() {
+
+            const q = document.getElementById('search').value.toLowerCase();
+
+            document.querySelectorAll('.client-card').forEach(card => {
+
+                const name = card.getAttribute('data-name');
+
+                card.style.display = name.includes(q) ? 'flex' : 'none';
+
+            });
+
+        }
+
+
+
+        function showToast(msg, type = 'success') {
+
+            const container = document.getElementById('toastContainer');
+
+            const toast = document.createElement('div');
+
+            toast.className = `custom-toast ${type}`;
+
+            toast.innerHTML = `
+
+                <i class="toast-icon fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+
+                <div>
+
+                    <div style="font-weight:bold; margin-bottom:2px;">${type === 'success' ? 'عملية ناجحة' : 'تنبيه'}</div>
+
+                    <div style="font-size:0.9rem; color:#555;">${msg}</div>
+
+                </div>
+
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+
+                toast.style.animation = 'slideInLeft 0.5s reverse forwards';
+
+                setTimeout(() => toast.remove(), 500);
+
+            }, 3000);
+
+        }
+
+
+
+        // --- PDF & WhatsApp (EXACT SAME LOGIC AS ORIGINAL) ---
+
+        function calculateSelectedTotals(data) {
+
+            const checkedBoxes = document.querySelectorAll('.sum-checkbox:checked');
+
+            let totals = {};
+
+            checkedBoxes.forEach(box => { totals[box.value] = 0; });
+
+            data.forEach(row => {
+
+                if(isDelivered(row)) {
+
+                    checkedBoxes.forEach(box => {
+
+                        const colName = box.value;
+
+                        let val = parseFloat(row[colName]);
+
+                        if (!isNaN(val)) totals[colName] += val;
+
+                    });
+
+                }
+
+            });
+
+            return totals;
+
+        }
+
+
+
+        function generatePDFContent(clientName) {
+
+            const data = groupedData[clientName];
+
+            const totals = calculateSelectedTotals(data); 
+
+            const rowsPerPage = parseInt(document.getElementById('rowsPerPage').value) || 14;
+
+            const totalPages = Math.ceil(data.length / rowsPerPage);
+
+            const dateStr = new Date().toLocaleDateString('EN-GB');
+
+
+
+            let summaryHTML = '';
+
+            const totalKeys = Object.keys(totals);
+
+            if(totalKeys.length > 0) {
+
+                summaryHTML = `
+
+                    <div style="background:#f9f9f9; border:1px solid #ddd; border-radius:8px; padding:10px; margin-bottom:15px; width:100%; box-sizing:border-box; flex-shrink: 0;">
+
+                        <h4 style="margin:0 0 10px 0; color:#099999; font-size:17px; border-bottom:1px solid #eee; padding-bottom:5px;">الخلاصة):</h4>
+
+                        <div style="display:flex; flex-wrap:wrap; gap:15px;">
+
+                            ${totalKeys.map(key => `
+
+                                <div style="flex:1; min-width:100px; text-align:center; border-left:1px solid #eee;">
+
+                                    <div style="font-size:10px; color:#777;"> مجموع ${key}</div>
+
+                                    <div style="font-weight:bold; color:#333; font-size:17px;">${totals[key].toFixed(2)}</div>
+
+                                </div>
+
+                            `).join('')}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+
+
+
+            // MODIFIED: position: relative needed for the absolute logo
+
+            const pageStyle = 'background: white; width: 297mm; height: 209mm; padding: 15mm; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;';
+
+            const container = document.createElement('div');
+
+
+
+            for (let i = 0; i < totalPages; i++) {
+
+                const start = i * rowsPerPage;
+
+                const end = start + rowsPerPage;
+
+                const pageData = data.slice(start, end);
+
+
+
+                const pageDiv = document.createElement('div');
+
+                pageDiv.style.cssText = pageStyle;
+
+                if (i < totalPages - 1) pageDiv.style.pageBreakAfter = "always";
+
+
+
+                // MODIFIED: Header now contains the centered Logo absolutely positioned
+
+                pageDiv.innerHTML = `
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid #099999; padding-bottom:15px; margin-bottom:20px; flex-shrink: 0; position: relative;">
+
+                        <div style="text-align:right;">
+
+                            <h2 style="color:#099999; margin:0; font-weight:bold; font-family:'Tajawal'; font-size:24px;">Ramada Delivery</h2>
+
+                            <p style="margin:5px 0 0; color:#555; font-size:14px;">كشف حساب تفصيلي</p>
+
+                        </div>
+
+
+
+                        <img src="https://raw.githubusercontent.com/BaselGhanem/RamadaDelivery/refs/heads/main/20260105_151047_0000.png" 
+
+                             style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 60px; width: auto;">
+
+
+
+                        <div style="text-align:left;">
+
+                            <h3 style="margin:0; font-weight:bold; font-size:20px;">${clientName}</h3>
+
+                            <p style="margin:5px 0 0; color:#555; font-size:12px;">${dateStr} | صفحة ${i+1}/${totalPages}</p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    ${i === 0 ? summaryHTML : ''} 
+
+                    
+
+                    <div style="flex-grow: 1;">
+
+                        <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:center; direction:rtl;">
+
+                            <thead>
+
+                                <tr style="background:#099999; color:white;">
+
+                                    <th style="padding:8px; border:1px solid #000; font-weight:bold; width: 40px;">#</th>
+
+                                    ${headers.map(h => `<th style="padding:8px; border:1px solid #000; font-weight:bold;">${h}</th>`).join('')}
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                ${pageData.map((row, idx) => {
+
+                                    const delivered = isDelivered(row);
+
+                                    const rowStyle = delivered ? '' : 'background-color: #ffebee; color: #b71c1c;';
+
+                                    const globalIndex = start + idx + 1; 
+
+                                    return `
+
+                                    <tr style="${rowStyle}">
+
+                                        <td style="padding:6px; border:1px solid #999; font-weight:bold;">${globalIndex}</td>
+
+                                        ${headers.map(h => `<td style="padding:6px; border:1px solid #999;">${row[h] || ''}</td>`).join('')}
+
+                                    </tr>`;
+
+                                }).join('')}
+
+                            </tbody>
+
+                            
+
+                            ${i === totalPages - 1 ? `
+
+                            <tfoot>
+
+                                <tr style="background:#e0fbfb; font-weight:bold; border-top:1px solid #000; font-size: 16px;">
+
+                                    <td style="padding:10px 8px; border:1px solid #000;">المجموع الكلي</td>
+
+                                    ${headers.map((h) => {
+
+                                        if (totals.hasOwnProperty(h)) {
+
+                                            return `<td style="padding:10px 8px; border:1px solid #000;">${totals[h].toFixed(2)}</td>`;
+
+                                        }
+
+                                        return `<td style="padding:10px 8px; border:1px solid #000;">-</td>`;
+
+                                    }).join('')}
+
+                                </tr>
+
+                            </tfoot>
+
+                            ` : ''}
+
+                        </table>
+
+                    </div>
+
+
+
+                    <div style="margin-top: auto; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#888; border-top:1px solid #eee; padding-top:8px; flex-shrink: 0;">
+
+                        <div style="font-family:sans-serif; font-weight:bold;">Ramada Delivery System</div>
+
+                        <div style="font-weight:bold;">${clientName}</div>
+
+                    </div>
+
+                `;
+
+                container.appendChild(pageDiv);
+
+            }
+
+            return container;
+
+        }
+
+
+
+        function sendWhatsApp(clientName, savedPhone) {
+
+            directDownload(clientName);
+
+            let phone = savedPhone;
+
+            if (!phone || phone.length < 5) {
+
+                const userInput = prompt(`يرجى إدخال رقم هاتف العميل (${clientName}):`, "");
+
+                if (userInput) {
+
+                    phone = userInput.replace(/[^0-9]/g, '');
+
+                } else {
+
+                    return; 
+
+                }
+
+            }
+
+            if (!phone.startsWith("962") && !phone.startsWith("00962") && phone.startsWith("07")) {
+
+                phone = "962" + phone.substring(1);
+
+            }
+
+            const text = encodeURIComponent(`مرحباً ${clientName}،\nمرفق كشف الحساب الخاص بكم.\n\nمع تحيات Ramada Delivery`);
+
+            const url = `https://wa.me/${phone}?text=${text}`;
+
+            window.open(url, '_blank');
+
+            showToast('تم فتح الواتساب، يرجى إرفاق الملف الذي تم تحميله.', 'success');
+
+        }
+
+
+
+        function directDownload(client) {
+
+            currentClient = client;
+
+            startPDFGeneration();
+
+        }
+
+
+
+        function startPDFGeneration() {
+
+            if (!currentClient) return;
+
+            document.getElementById('loader').style.display = 'flex';
+
+            
+
+            const zone = document.getElementById('pdf-generation-zone');
+
+            const wrapper = document.getElementById('pdf-content-wrapper');
+
+            zone.style.display = 'block';
+
+            wrapper.innerHTML = '';
+
+            
+
+            const contentElement = generatePDFContent(currentClient);
+
+            wrapper.appendChild(contentElement);
+
+
+
+            setTimeout(() => {
+
+                html2pdf().set({
+
+                    margin: 0,
+
+                    filename: `كشف_${currentClient}.pdf`,
+
+                    image: { type: 'jpeg', quality: 0.98 },
+
+                    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+
+                }).from(wrapper).save().then(() => {
+
+                    zone.style.display = 'none';
+
+                    document.getElementById('loader').style.display = 'none';
+
+                    showToast('تم تحميل ملف PDF بنجاح', 'success');
+
+                });
+
+            }, 1000);
+
+        }
+
+
+
+        async function downloadAllZIP() {
+
+            const clients = Object.keys(groupedData);
+
+            if(clients.length === 0) return;
+
+
+
+            const zip = new JSZip();
+
+            const loader = document.getElementById('loader');
+
+            const loaderText = document.getElementById('loaderText');
+
+            const loaderSub = document.getElementById('loaderSubText');
+
+            const zone = document.getElementById('pdf-generation-zone');
+
+            const wrapper = document.getElementById('pdf-content-wrapper');
+
+
+
+            loader.style.display = 'flex';
+
+            zone.style.display = 'block';
+
+
+
+            for (let i = 0; i < clients.length; i++) {
+
+                const client = clients[i];
+
+                loaderText.textContent = `جاري تحضير ملف ${i + 1} من ${clients.length}`;
+
+                loaderSub.textContent = `العميل: ${client}`;
+
+
+
+                wrapper.innerHTML = ''; 
+
+                const contentElement = generatePDFContent(client);
+
+                wrapper.appendChild(contentElement);
+
+
+
+                await new Promise(r => setTimeout(r, 200));
+
+
+
+                const blob = await html2pdf().set({
+
+                    margin: 0,
+
+                    filename: `كشف_${client}.pdf`,
+
+                    image: { type: 'jpeg', quality: 0.98 },
+
+                    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+
+                }).from(wrapper).output('blob');
+
+
+
+                zip.file(`كشف_${client}.pdf`, blob);
+
+            }
+
+
+
+            loaderText.textContent = 'جاري ضغط الملفات...';
+
+            
+
+            zip.generateAsync({type:"blob"}).then(function(content) {
+
+                saveAs(content, "كشوفات_Ramada_Delivery.zip");
+
+                loader.style.display = 'none';
+
+                zone.style.display = 'none';
+
+                showToast('تم تحميل الملف المضغوط ZIP', 'success');
+
+            });
+
+        }
+
+    </script>
+
+</body>
+
+</html>
             transition: var(--transition-fluid);
             display: flex;
             flex-direction: column;
@@ -992,3 +2765,4 @@
     </script>
 </body>
 </html>
+
