@@ -382,7 +382,7 @@
                     </div>
                     <div class="col-6">
                         <label class="small text-muted d-block text-right">الأسطر/صفحة</label>
-                        <input type="number" id="rowsPerPage" class="form-control" value="14">
+                        <input type="number" id="rowsPerPage" class="form-control" value="12">
                     </div>
                 </div>
             </div>
@@ -798,7 +798,8 @@
         function generatePDFContent(clientName) {
             const data = groupedData[clientName];
             const totals = calculateSelectedTotals(data); 
-            const rowsPerPage = parseInt(document.getElementById('rowsPerPage').value) || 14;
+            // TWEAK: Using default 12 from input
+            const rowsPerPage = parseInt(document.getElementById('rowsPerPage').value) || 12;
             const totalPages = Math.ceil(data.length / rowsPerPage);
             const dateStr = new Date().toLocaleDateString('EN-GB');
 
@@ -845,7 +846,7 @@
                         </div>
 
                         <img src="https://raw.githubusercontent.com/BaselGhanem/RamadaDelivery/refs/heads/main/20260105_151047_0000.png" 
-                             style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 110px; width: auto;">
+                             style="position: absolute; left: 50%; top: 35%; transform: translate(-50%, -50%); height: 110px; width: auto;">
 
                         <div style="text-align:left;">
                             <h3 style="margin:0; font-weight:bold; font-size:20px; color:${pdfText}">${clientName}</h3>
@@ -856,11 +857,11 @@
                     ${i === 0 ? summaryHTML : ''} 
                     
                     <div style="flex-grow: 1;">
-                        <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:center; direction:rtl;">
+                        <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center; direction:rtl; table-layout: auto;">
                             <thead>
                                 <tr style="background:${pdfPrimary}; color:white;">
-                                    <th style="padding:8px; border:1px solid #000; font-weight:bold; width: 40px;">#</th>
-                                    ${headers.map(h => `<th style="padding:8px; border:1px solid #000; font-weight:bold;">${h}</th>`).join('')}
+                                    <th style="padding:6px 5px; border:1px solid #000; font-weight:bold; width: 40px; white-space: nowrap; vertical-align: middle;">#</th>
+                                    ${headers.map(h => `<th style="padding:6px 5px; border:1px solid #000; font-weight:bold; white-space: nowrap; vertical-align: middle;">${h}</th>`).join('')}
                                 </tr>
                             </thead>
                             <tbody>
@@ -872,18 +873,18 @@
                                         // إذا تم التسليم: خط عريض وكبير
                                         rowStyle = "font-weight: 800; font-size: 14px;";
                                     } else {
-                                        // === التعديل هنا: إضافة font-size: 14px ===
+                                        // إذا لم يتم التسليم: خلفية رمادية وخط عادي (حجم 14 أيضا)
                                         rowStyle = "background-color: #f2f2f2; color: #000000; font-weight: normal; font-size: 14px;";
                                     }
 
                                     const globalIndex = start + idx + 1; 
                                     return `
                                     <tr style="${rowStyle}">
-                                        <td style="padding:6px; border:1px solid #999; font-weight:bold;">${globalIndex}</td>
+                                        <td style="padding:6px 5px; border:1px solid #000; font-weight:bold; vertical-align: middle;">${globalIndex}</td>
                                         ${headers.map(h => {
-                                            // === التعديل هنا: السماح بظهور الصفر ===
+                                            // السماح بظهور الصفر
                                             const val = (row[h] !== undefined && row[h] !== null) ? row[h] : '';
-                                            return `<td style="padding:6px; border:1px solid #999;">${val}</td>`;
+                                            return `<td style="padding:6px 5px; border:1px solid #000; vertical-align: middle;">${val}</td>`;
                                         }).join('')}
                                     </tr>`;
                                 }).join('')}
@@ -892,12 +893,12 @@
                             ${i === totalPages - 1 ? `
                             <tfoot>
                                 <tr style="background:${pdfFooterBg}; font-weight:bold; border-top:1px solid #000; font-size: 16px; color:${pdfText};">
-                                    <td style="padding:10px 8px; border:1px solid #000;">المجموع الكلي</td>
+                                    <td style="padding:10px 8px; border:1px solid #000; vertical-align: middle;">المجموع الكلي</td>
                                     ${headers.map((h) => {
                                         if (totals.hasOwnProperty(h)) {
-                                            return `<td style="padding:10px 8px; border:1px solid #000;">${totals[h].toFixed(2)}</td>`;
+                                            return `<td style="padding:10px 8px; border:1px solid #000; vertical-align: middle;">${totals[h].toFixed(2)}</td>`;
                                         }
-                                        return `<td style="padding:10px 8px; border:1px solid #000;">-</td>`;
+                                        return `<td style="padding:10px 8px; border:1px solid #000; vertical-align: middle;">-</td>`;
                                     }).join('')}
                                 </tr>
                             </tfoot>
@@ -1015,4 +1016,3 @@
     </script>
 </body>
 </html>
-
