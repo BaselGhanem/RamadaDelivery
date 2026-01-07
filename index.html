@@ -376,13 +376,9 @@
             <div class="mb-4 text-right">
                 <div class="section-title"><i class="fas fa-sliders-h"></i> إعدادات الصفحة</div>
                 <div class="row g-2">
-                    <div class="col-6">
+                    <div class="col-12">
                         <label class="small text-muted d-block text-right">سطر العناوين</label>
                         <input type="number" id="headerRow" class="form-control" value="1">
-                    </div>
-                    <div class="col-6">
-                        <label class="small text-muted d-block text-right">الأسطر/صفحة</label>
-                        <input type="number" id="rowsPerPage" class="form-control" value="12">
                     </div>
                 </div>
             </div>
@@ -778,7 +774,7 @@
             }, 3000);
         }
 
-        // --- PDF & WhatsApp (UPDATED COLORS) ---
+        // --- PDF & WhatsApp (UPDATED COLORS & LOGIC) ---
         function calculateSelectedTotals(data) {
             const checkedBoxes = document.querySelectorAll('.sum-checkbox:checked');
             let totals = {};
@@ -798,45 +794,35 @@
         function generatePDFContent(clientName) {
             const data = groupedData[clientName];
             const totals = calculateSelectedTotals(data);
-            const userRowsPerPage = parseInt(document.getElementById('rowsPerPage').value) || 12;
+            
+            // --- التثبيت النهائي: 10 أسطر فقط في كل صفحة ---
+            const fixedRowsPerPage = 10; 
+            
             const dateStr = new Date().toLocaleDateString('EN-GB');
-
-            // --- Updated Colors for PDF (نفس ألوانك ما تغيرت) ---
             const pdfPrimary = "#f3822b"; 
             const pdfFooterBg = "#fff3e0"; 
             const pdfText = "#4e4e4e";
 
-            // --- المنطق الجديد: تقسيم البيانات لصفحات بذكاء ---
-            // الصفحة الأولى تتحمل أسطر أقل إذا كان هناك مربع خلاصة
-            const hasSummary = Object.keys(totals).length > 0;
-            const summarySpaceReduction = hasSummary ? 4 : 0; // خصم 4 أسطر لإفساح المجال للخلاصة
-            const firstPageCapacity = Math.max(1, userRowsPerPage - summarySpaceReduction);
-            
+            // تقسيم البيانات إلى صفحات (كل صفحة 10 أسطر بالضبط)
             let pagesData = [];
-            let currentRow = 0;
-
-            // بناء الصفحات
-            while (currentRow < data.length) {
-                let limit = (pagesData.length === 0) ? firstPageCapacity : userRowsPerPage;
-                let end = Math.min(currentRow + limit, data.length);
-                pagesData.push(data.slice(currentRow, end));
-                currentRow = end;
+            for (let i = 0; i < data.length; i += fixedRowsPerPage) {
+                pagesData.push(data.slice(i, i + fixedRowsPerPage));
             }
 
             const totalPages = pagesData.length;
+            const hasSummary = Object.keys(totals).length > 0;
 
-            // --- تحضير HTML الخلاصة ---
+            // --- تصميم الخلاصة ---
             let summaryHTML = '';
-            const totalKeys = Object.keys(totals);
             if (hasSummary) {
                 summaryHTML = `
                     <div style="background:#f9f9f9; border:1px solid #ddd; border-radius:8px; padding:10px; margin-bottom:15px; width:100%; box-sizing:border-box; flex-shrink: 0;">
-                        <h4 style="margin:0 0 10px 0; color:${pdfPrimary}; font-size:17px; border-bottom:1px solid #eee; padding-bottom:5px;">الخلاصة:</h4>
-                        <div style="display:flex; flex-wrap:wrap; gap:15px;">
-                            ${totalKeys.map(key => `
-                                <div style="flex:1; min-width:100px; text-align:center; border-left:1px solid #eee;">
-                                    <div style="font-size:14px; color:#777;"> مجموع ${key}</div>
-                                    <div style="font-weight:bold; color:#333; font-size:24px;">${totals[key].toFixed(2)}</div>
+                        <h4 style="margin:0 0 8px 0; color:${pdfPrimary}; font-size:16px; border-bottom:1px solid #eee; padding-bottom:5px;">الخلاصة:</h4>
+                        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+                            ${Object.keys(totals).map(key => `
+                                <div style="flex:1; min-width:80px; text-align:center; border-left:1px solid #eee;">
+                                    <div style="font-size:12px; color:#777;"> مجموع ${key}</div>
+                                    <div style="font-weight:bold; color:#333; font-size:18px;">${totals[key].toFixed(2)}</div>
                                 </div>
                             `).join('')}
                         </div>
@@ -844,66 +830,58 @@
                 `;
             }
 
-            const pageStyle = 'background: white; width: 297mm; height: 209mm; padding: 15mm; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;';
             const container = document.createElement('div');
+            const pageStyle = 'background: white; width: 297mm; height: 209mm; padding: 10mm 15mm; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;';
 
-            // --- التكرار لبناء الصفحات ---
+            // --- بناء الصفحات ---
             pagesData.forEach((pageData, i) => {
                 const pageDiv = document.createElement('div');
                 pageDiv.style.cssText = pageStyle;
                 if (i < totalPages - 1) pageDiv.style.pageBreakAfter = "always";
 
-                // حساب الترقيم التسلسلي (Global Index)
-                // نحتاج معرفة كم سطر مر في الصفحات السابقة
-                let previousRowsCount = 0;
-                if (i > 0) {
-                    previousRowsCount = firstPageCapacity + ((i - 1) * userRowsPerPage);
-                }
+                // حساب التسلسل الصحيح
+                const previousRowsCount = i * fixedRowsPerPage;
 
                 pageDiv.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid ${pdfPrimary}; padding-bottom:15px; margin-bottom:20px; flex-shrink: 0; position: relative;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid ${pdfPrimary}; padding-bottom:10px; margin-bottom:15px; flex-shrink: 0; position: relative;">
                         <div style="text-align:right;">
-                            <h2 style="color:${pdfPrimary}; margin:0; font-weight:bold; font-family:'Tajawal'; font-size:24px;">Ramada Delivery</h2>
-                            <p style="margin:5px 0 0; color:${pdfText}; font-size:14px;">كشف حساب تفصيلي</p>
+                            <h2 style="color:${pdfPrimary}; margin:0; font-weight:bold; font-family:'Tajawal'; font-size:22px;">Ramada Delivery</h2>
+                            <p style="margin:0; color:${pdfText}; font-size:12px;">كشف حساب تفصيلي</p>
                         </div>
 
                         <img src="https://raw.githubusercontent.com/BaselGhanem/RamadaDelivery/refs/heads/main/20260105_151047_0000.png" 
-                             style="position: absolute; left: 50%; top: 35%; transform: translate(-50%, -50%); height: 110px; width: auto;">
+                             style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); height: 90px; width: auto;">
 
                         <div style="text-align:left;">
-                            <h3 style="margin:0; font-weight:bold; font-size:20px; color:${pdfText}">${clientName}</h3>
-                            <p style="margin:5px 0 0; color:#555; font-size:12px;">${dateStr} | صفحة ${i+1}/${totalPages}</p>
+                            <h3 style="margin:0; font-weight:bold; font-size:18px; color:${pdfText}">${clientName}</h3>
+                            <p style="margin:0; color:#555; font-size:11px;">${dateStr} | صفحة ${i+1} من ${totalPages}</p>
                         </div>
                     </div>
 
                     ${i === 0 ? summaryHTML : ''} 
                     
-                    <div style="flex-grow: 1;">
+                    <div style="flex-grow: 1; overflow: hidden;">
                         <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:center; direction:rtl; table-layout: auto;">
                             <thead>
                                 <tr style="background:${pdfPrimary}; color:white;">
-                                    <th style="padding:6px 5px; border:1px solid #000; font-weight:bold; width: 40px; white-space: nowrap; vertical-align: middle;">#</th>
-                                    ${headers.map(h => `<th style="padding:6px 5px; border:1px solid #000; font-weight:bold; white-space: nowrap; vertical-align: middle;">${h}</th>`).join('')}
+                                    <th style="padding:5px; border:1px solid #000; font-weight:bold; width: 40px; white-space: nowrap;">#</th>
+                                    ${headers.map(h => `<th style="padding:5px; border:1px solid #000; font-weight:bold; white-space: nowrap;">${h}</th>`).join('')}
                                 </tr>
                             </thead>
                             <tbody>
                                 ${pageData.map((row, idx) => {
                                     const delivered = isDelivered(row);
-                                    let rowStyle = "";
+                                    let rowStyle = delivered 
+                                        ? "font-weight: 800; font-size: 13px;" 
+                                        : "background-color: #f2f2f2; color: #000000; font-weight: normal; font-size: 13px;";
                                     
-                                    if(delivered) {
-                                        rowStyle = "font-weight: 800; font-size: 14px;";
-                                    } else {
-                                        rowStyle = "background-color: #f2f2f2; color: #000000; font-weight: normal; font-size: 14px;";
-                                    }
-
                                     const globalIndex = previousRowsCount + idx + 1; 
                                     return `
                                     <tr style="${rowStyle}">
-                                        <td style="padding:6px 5px; border:1px solid #000; font-weight:bold; vertical-align: middle;">${globalIndex}</td>
+                                        <td style="padding:5px; border:1px solid #000; font-weight:bold;">${globalIndex}</td>
                                         ${headers.map(h => {
                                             const val = (row[h] !== undefined && row[h] !== null) ? row[h] : '';
-                                            return `<td style="padding:6px 5px; border:1px solid #000; vertical-align: middle;">${val}</td>`;
+                                            return `<td style="padding:5px; border:1px solid #000;">${val}</td>`;
                                         }).join('')}
                                     </tr>`;
                                 }).join('')}
@@ -911,13 +889,10 @@
                             
                             ${i === totalPages - 1 ? `
                             <tfoot>
-                                <tr style="background:${pdfFooterBg}; font-weight:bold; border-top:1px solid #000; font-size: 16px; color:${pdfText};">
-                                    <td style="padding:10px 8px; border:1px solid #000; vertical-align: middle;">المجموع الكلي</td>
+                                <tr style="background:${pdfFooterBg}; font-weight:bold; border-top:1px solid #000; font-size: 14px; color:${pdfText};">
+                                    <td style="padding:8px; border:1px solid #000;">المجموع</td>
                                     ${headers.map((h) => {
-                                        if (totals.hasOwnProperty(h)) {
-                                            return `<td style="padding:10px 8px; border:1px solid #000; vertical-align: middle;">${totals[h].toFixed(2)}</td>`;
-                                        }
-                                        return `<td style="padding:10px 8px; border:1px solid #000; vertical-align: middle;">-</td>`;
+                                        return `<td style="padding:8px; border:1px solid #000;">${totals[h] ? totals[h].toFixed(2) : '-'}</td>`;
                                     }).join('')}
                                 </tr>
                             </tfoot>
@@ -925,7 +900,7 @@
                         </table>
                     </div>
 
-                    <div style="margin-top: auto; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#888; border-top:1px solid #eee; padding-top:8px; flex-shrink: 0;">
+                    <div style="margin-top: auto; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#888; border-top:1px solid #eee; padding-top:5px; flex-shrink: 0;">
                         <div style="font-family:sans-serif; font-weight:bold;">Ramada Delivery System</div>
                         <div style="font-weight:bold;">${clientName}</div>
                     </div>
@@ -933,7 +908,6 @@
                 container.appendChild(pageDiv);
             });
             return container;
-        
         }
 
         function sendWhatsApp(clientName, savedPhone) {
