@@ -797,20 +797,38 @@
 
         function generatePDFContent(clientName) {
             const data = groupedData[clientName];
-            const totals = calculateSelectedTotals(data); 
-            // TWEAK: Using default 12 from input
-            const rowsPerPage = parseInt(document.getElementById('rowsPerPage').value) || 12;
-            const totalPages = Math.ceil(data.length / rowsPerPage);
+            const totals = calculateSelectedTotals(data);
+            const userRowsPerPage = parseInt(document.getElementById('rowsPerPage').value) || 12;
             const dateStr = new Date().toLocaleDateString('EN-GB');
 
-            // --- Updated Colors for PDF ---
-            const pdfPrimary = "#f3822b"; // Orange
-            const pdfFooterBg = "#fff3e0"; // Light Orange
+            // --- Updated Colors for PDF (نفس ألوانك ما تغيرت) ---
+            const pdfPrimary = "#f3822b"; 
+            const pdfFooterBg = "#fff3e0"; 
             const pdfText = "#4e4e4e";
 
+            // --- المنطق الجديد: تقسيم البيانات لصفحات بذكاء ---
+            // الصفحة الأولى تتحمل أسطر أقل إذا كان هناك مربع خلاصة
+            const hasSummary = Object.keys(totals).length > 0;
+            const summarySpaceReduction = hasSummary ? 4 : 0; // خصم 4 أسطر لإفساح المجال للخلاصة
+            const firstPageCapacity = Math.max(1, userRowsPerPage - summarySpaceReduction);
+            
+            let pagesData = [];
+            let currentRow = 0;
+
+            // بناء الصفحات
+            while (currentRow < data.length) {
+                let limit = (pagesData.length === 0) ? firstPageCapacity : userRowsPerPage;
+                let end = Math.min(currentRow + limit, data.length);
+                pagesData.push(data.slice(currentRow, end));
+                currentRow = end;
+            }
+
+            const totalPages = pagesData.length;
+
+            // --- تحضير HTML الخلاصة ---
             let summaryHTML = '';
             const totalKeys = Object.keys(totals);
-            if(totalKeys.length > 0) {
+            if (hasSummary) {
                 summaryHTML = `
                     <div style="background:#f9f9f9; border:1px solid #ddd; border-radius:8px; padding:10px; margin-bottom:15px; width:100%; box-sizing:border-box; flex-shrink: 0;">
                         <h4 style="margin:0 0 10px 0; color:${pdfPrimary}; font-size:17px; border-bottom:1px solid #eee; padding-bottom:5px;">الخلاصة:</h4>
@@ -829,14 +847,18 @@
             const pageStyle = 'background: white; width: 297mm; height: 209mm; padding: 15mm; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;';
             const container = document.createElement('div');
 
-            for (let i = 0; i < totalPages; i++) {
-                const start = i * rowsPerPage;
-                const end = start + rowsPerPage;
-                const pageData = data.slice(start, end);
-
+            // --- التكرار لبناء الصفحات ---
+            pagesData.forEach((pageData, i) => {
                 const pageDiv = document.createElement('div');
                 pageDiv.style.cssText = pageStyle;
                 if (i < totalPages - 1) pageDiv.style.pageBreakAfter = "always";
+
+                // حساب الترقيم التسلسلي (Global Index)
+                // نحتاج معرفة كم سطر مر في الصفحات السابقة
+                let previousRowsCount = 0;
+                if (i > 0) {
+                    previousRowsCount = firstPageCapacity + ((i - 1) * userRowsPerPage);
+                }
 
                 pageDiv.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:3px solid ${pdfPrimary}; padding-bottom:15px; margin-bottom:20px; flex-shrink: 0; position: relative;">
@@ -870,19 +892,16 @@
                                     let rowStyle = "";
                                     
                                     if(delivered) {
-                                        // إذا تم التسليم: خط عريض وكبير
                                         rowStyle = "font-weight: 800; font-size: 14px;";
                                     } else {
-                                        // إذا لم يتم التسليم: خلفية رمادية وخط عادي (حجم 14 أيضا)
                                         rowStyle = "background-color: #f2f2f2; color: #000000; font-weight: normal; font-size: 14px;";
                                     }
 
-                                    const globalIndex = start + idx + 1; 
+                                    const globalIndex = previousRowsCount + idx + 1; 
                                     return `
                                     <tr style="${rowStyle}">
                                         <td style="padding:6px 5px; border:1px solid #000; font-weight:bold; vertical-align: middle;">${globalIndex}</td>
                                         ${headers.map(h => {
-                                            // السماح بظهور الصفر
                                             const val = (row[h] !== undefined && row[h] !== null) ? row[h] : '';
                                             return `<td style="padding:6px 5px; border:1px solid #000; vertical-align: middle;">${val}</td>`;
                                         }).join('')}
@@ -912,8 +931,9 @@
                     </div>
                 `;
                 container.appendChild(pageDiv);
-            }
+            });
             return container;
+        
         }
 
         function sendWhatsApp(clientName, savedPhone) {
